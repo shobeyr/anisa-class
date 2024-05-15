@@ -48,6 +48,5 @@ spec:
         - name: odoo-web-addons
           persistentVolumeClaim:
             claimName: odoo-web-addons-vclaim
-
-
+            
 ### odoo container user ID: 101
