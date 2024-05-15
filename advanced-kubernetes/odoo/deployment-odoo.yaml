@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo-web
+  namespace: odoo
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: odoo-web
+  template:  
+    metadata: 
+      labels:
+        app: odoo-web
+    spec: 
+      containers: 
+        - name: odoo-web-container
+          image: odoo:17
+          #securityContext:
+           # runAsUser: 0
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+          envFrom:
+            - secretRef:
+                name: odoodb-secret
+          env:
+            - name: HOST
+              value: odoo-postgres-svc
+          volumeMounts:
+            - name: odoo-web-data
+              mountPath: /var/lib/odoo
+            - name: odoo-web-config
+              mountPath: /etc/odoo
+            - name: odoo-web-addons
+              mountPath: /mnt/extra-addons
+      volumes:
+        - name: odoo-web-data
+          persistentVolumeClaim:
+            claimName: odoo-web-data-vclaim
+        - name: odoo-web-config
+          persistentVolumeClaim:
+            claimName: odoo-web-config-vclaim
+        - name: odoo-web-addons
+          persistentVolumeClaim:
+            claimName: odoo-web-addons-vclaim
+
+
+

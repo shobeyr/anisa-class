@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo-postgres
+  namespace: odoo
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: odoo-postgres
+  template:  
+    metadata: 
+      labels:
+        app: odoo-postgres
+    spec: 
+      containers: 
+        - name: odoo-postgres-container
+          image: postgres:14
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+          envFrom:
+            - secretRef:
+                name: odoodb-secret
+            - configMapRef:
+                name: odoodb-configmap
+          volumeMounts:
+            - name: postgresdb-vol
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgresdb-vol
+          persistentVolumeClaim:
+            claimName: odoo-db-vclaim
+
+
+
+
