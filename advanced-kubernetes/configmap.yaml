@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: mysql-configmap
 data:
-  MYSQL_ROOT_PASSWORD: @nis@123
+  MYSQL_ROOT_PASSWORD: "@nis@123"
